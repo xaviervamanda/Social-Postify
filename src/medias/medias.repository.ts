@@ -19,6 +19,21 @@ export class MediasRepository {
   async findOne(id: number) {
     return await this.prisma.media.findUnique({
       where: { id },
+      include: {
+        Publication: true,
+      },
+    });
+  }
+
+  async findOneByTitle(title: string) {
+    return await this.prisma.media.findFirst({
+      where: { title },
+    });
+  }
+
+  async findOneByUsername(username: string) {
+    return await this.prisma.media.findFirst({
+      where: { username },
     });
   }
 

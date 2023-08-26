@@ -1,28 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { MediasRepository } from './medias.repository';
+import { HelpersService } from 'src/helpers/helpers.service';
 
 @Injectable()
 export class MediasService {
-  constructor(private readonly mediasRepository: MediasRepository) {}
-  create(createMediaDto: CreateMediaDto) {
+  constructor(
+    private readonly mediasRepository: MediasRepository,
+    private readonly helperService: HelpersService
+    ) {}
+
+  async create(createMediaDto: CreateMediaDto) {
+    this.helperService.checkMediaDuplicity(createMediaDto.title, createMediaDto.username);
     return this.mediasRepository.create(createMediaDto);
   }
 
-  findAll() {
-    return this.mediasRepository.findAll();
+  async findAll() {
+    return await this.mediasRepository.findAll();
   }
 
-  findOne(id: number) {
-    return this.mediasRepository.findOne(id);
+  async findOne(id: number) {
+    const media = await this.mediasRepository.findOne(id);
+    if (!media) {
+      throw new HttpException('Media not found', HttpStatus.NOT_FOUND);
+    }
+    return media;
+  }
+  async update(id: number, updateMediaDto: UpdateMediaDto) {
+    const media = await this.mediasRepository.findOne(id);
+    if (!media) {
+      throw new HttpException('Media not found', HttpStatus.NOT_FOUND);
+    }
+    if (updateMediaDto.title && updateMediaDto.username) {
+      this.helperService.checkMediaDuplicity(updateMediaDto.title, updateMediaDto.username);
+    }
+    if (updateMediaDto.title) {
+      this.helperService.checkMediaDuplicity(updateMediaDto.title, media.username);
+    }
+    if (updateMediaDto.username) {
+      this.helperService.checkMediaDuplicity(media.title, updateMediaDto.username);
+    }
+    return await this.mediasRepository.update(id, updateMediaDto);
   }
 
-  update(id: number, updateMediaDto: UpdateMediaDto) {
-    return this.mediasRepository.update(id, updateMediaDto);
-  }
-
-  remove(id: number) {
-    return this.mediasRepository.remove(id);
+  async remove(id: number) {
+    const media = await this.mediasRepository.findOne(id);
+    if (!media) {
+      throw new HttpException('Media not found', HttpStatus.NOT_FOUND);
+    }
+    if (media.Publication.length !== 0){
+      throw new HttpException('This media has publications', HttpStatus.FORBIDDEN);
+    }
+    return await this.mediasRepository.remove(id);
   }
 }
