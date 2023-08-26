@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsRepository } from './posts.repository';
@@ -7,22 +7,29 @@ import { PostsRepository } from './posts.repository';
 export class PostsService {
   constructor(private readonly postsRepository: PostsRepository) {}
   create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+    return this.postsRepository.create(createPostDto);
   }
 
   findAll() {
-    return `This action returns all posts`;
+    return this.postsRepository.findAll();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} post`;
+    const post = this.postsRepository.findOne(id);
+    if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+    const post = this.postsRepository.findOne(id);
+    if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    return this.postsRepository.update(id, updatePostDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} post`;
+    const post = this.postsRepository.findOne(id);
+    if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    if (post.Publication.length !== 0) throw new HttpException('This post has publications', HttpStatus.FORBIDDEN);
+    return this.postsRepository.remove(id);
   }
 }
