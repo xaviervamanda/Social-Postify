@@ -6,30 +6,30 @@ import { PostsRepository } from './posts.repository';
 @Injectable()
 export class PostsService {
   constructor(private readonly postsRepository: PostsRepository) {}
-  create(createPostDto: CreatePostDto) {
-    return this.postsRepository.create(createPostDto);
+  async create(createPostDto: CreatePostDto) {
+    return await this.postsRepository.create(createPostDto);
   }
 
-  findAll() {
-    return this.postsRepository.findAll();
+  async findAll() {
+    return await this.postsRepository.findAll();
   }
 
-  findOne(id: number) {
-    const post = this.postsRepository.findOne(id);
+  async findOne(id: number) {
+    const post = await this.postsRepository.findOne(id);
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    const post = this.postsRepository.findOne(id);
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    const post = await this.postsRepository.findOne(id);
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    return this.postsRepository.update(id, updatePostDto);
+    return await this.postsRepository.update(id, updatePostDto);
   }
 
-  remove(id: number) {
-    const post = this.postsRepository.findOne(id);
+  async remove(id: number) {
+    const post = await this.postsRepository.findOne(id);
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     if (post.Publication.length !== 0) throw new HttpException('This post has publications', HttpStatus.FORBIDDEN);
-    return this.postsRepository.remove(id);
+    return await this.postsRepository.remove(id);
   }
 }
