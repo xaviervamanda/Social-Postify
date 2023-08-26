@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PublicationService } from './publication.service';
+import { PublicationService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 
-@Controller('publication')
+@Controller('publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 

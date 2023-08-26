@@ -7,22 +7,31 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PublicationRepository {
   constructor(private readonly prisma: PrismaService) {}
   create(createPublicationDto: CreatePublicationDto) {
-    return 'This action adds a new publication';
+    return this.prisma.publication.create({
+      data: createPublicationDto,
+    });
   }
 
   findAll() {
-    return `This action returns all publication`;
+    return this.prisma.publication.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} publication`;
+    return this.prisma.publication.findUnique({
+      where: { id },
+    });
   }
 
   update(id: number, updatePublicationDto: UpdatePublicationDto) {
-    return `This action updates a #${id} publication`;
+    return this.prisma.publication.update({
+      where: { id },
+      data: updatePublicationDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} publication`;
+    return this.prisma.publication.delete({
+      where: { id },
+    });
   }
 }
