@@ -32,6 +32,7 @@ export class PublicationService {
     if (!publication) {
       throw new HttpException('Publication not found', HttpStatus.NOT_FOUND);
     }
+    await this.helpersService.checkMediaAndPost(publication.mediaId, publication.postId);
     return await this.publicationRepository.update(id, updatePublicationDto);
   }
 
@@ -40,7 +41,6 @@ export class PublicationService {
     if (!publication) {
       throw new HttpException('Publication not found', HttpStatus.NOT_FOUND);
     }
-    await this.helpersService.checkMediaAndPost(publication.mediaId, publication.postId);
     return await this.publicationRepository.remove(id);
   }
 }
