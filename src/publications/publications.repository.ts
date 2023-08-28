@@ -15,6 +15,59 @@ export class PublicationRepository {
   findAll() {
     return this.prisma.publication.findMany();
   }
+  
+  findAllWithPublishedAndAfterFilters(published: boolean, after: string) {
+    const currentDay = new Date();
+    if (published) {
+      return this.prisma.publication.findMany({
+        where: {
+          date: {
+            lt: currentDay,
+            gt: after
+          }
+        },
+      });
+    }
+    return this.prisma.publication.findMany({
+      where: {
+        date: {
+          gte: currentDay,
+          gt: after
+
+        }
+      }
+    });
+  }
+
+  findAllWithPublishedFilter(published: boolean) {
+    const currentDay = new Date();
+    if (published) {
+      return this.prisma.publication.findMany({
+        where: {
+          date: {
+            lt: currentDay
+          }
+        },
+      });
+    }
+    return this.prisma.publication.findMany({
+      where: {
+        date: {
+          gte: currentDay
+        }
+      }
+    });
+  }
+
+  findAllWithAfterFilter(after: string) {
+    return this.prisma.publication.findMany({
+      where: {
+        date: {
+          gt: after
+        }
+      }
+    })
+  }
 
   findOne(id: number) {
     return this.prisma.publication.findUnique({

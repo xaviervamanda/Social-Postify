@@ -3,6 +3,7 @@ import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { PublicationRepository } from './publications.repository';
 import { HelpersService } from '../helpers/helpers.service';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class PublicationService {
@@ -15,7 +16,19 @@ export class PublicationService {
     return await this.publicationRepository.create(createPublicationDto);
   }
 
-  async findAll() {
+  async findAll(published: boolean, after: string) {
+    console.log(published);
+    console.log(after);
+    const afterDate = dayjs(after).toISOString();
+    if (published !== undefined && after !== undefined) {
+      return await this.publicationRepository.findAllWithPublishedAndAfterFilters(published, afterDate);
+    }
+    if (published !== undefined) {
+      return await this.publicationRepository.findAllWithPublishedFilter(published);
+    }
+    if (after !== undefined) {
+      return await this.publicationRepository.findAllWithAfterFilter(afterDate);
+    }
     return await this.publicationRepository.findAll();
   }
 
