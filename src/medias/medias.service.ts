@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nest
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { MediasRepository } from './medias.repository';
-import { HelpersService } from 'src/helpers/helpers.service';
+import { HelpersService } from '../helpers/helpers.service';
 
 @Injectable()
 export class MediasService {
@@ -12,8 +12,8 @@ export class MediasService {
     ) {}
 
   async create(createMediaDto: CreateMediaDto) {
-    this.helperService.checkMediaDuplicity(createMediaDto.title, createMediaDto.username);
-    return this.mediasRepository.create(createMediaDto);
+    await this.helperService.checkMediaDuplicity(createMediaDto.title, createMediaDto.username);
+    return await this.mediasRepository.create(createMediaDto);
   }
 
   async findAll() {
@@ -33,13 +33,13 @@ export class MediasService {
       throw new HttpException('Media not found', HttpStatus.NOT_FOUND);
     }
     if (updateMediaDto.title && updateMediaDto.username) {
-      this.helperService.checkMediaDuplicity(updateMediaDto.title, updateMediaDto.username);
+      await this.helperService.checkMediaDuplicity(updateMediaDto.title, updateMediaDto.username);
     }
     if (updateMediaDto.title) {
-      this.helperService.checkMediaDuplicity(updateMediaDto.title, media.username);
+      await this.helperService.checkMediaDuplicity(updateMediaDto.title, media.username);
     }
     if (updateMediaDto.username) {
-      this.helperService.checkMediaDuplicity(media.title, updateMediaDto.username);
+      await this.helperService.checkMediaDuplicity(media.title, updateMediaDto.username);
     }
     return await this.mediasRepository.update(id, updateMediaDto);
   }

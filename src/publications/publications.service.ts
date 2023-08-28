@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { PublicationRepository } from './publications.repository';
-import { HelpersService } from 'src/helpers/helpers.service';
+import { HelpersService } from '../helpers/helpers.service';
 
 @Injectable()
 export class PublicationService {

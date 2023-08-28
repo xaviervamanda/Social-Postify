@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { MediasRepository } from 'src/medias/medias.repository';
-import { PostsRepository } from 'src/posts/posts.repository';
+import { MediasRepository } from '../medias/medias.repository';
+import { PostsRepository } from '../posts/posts.repository';
 
 @Injectable()
 export class HelpersService {

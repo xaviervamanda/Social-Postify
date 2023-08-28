@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { PostsRepository } from './posts.repository';
-import { HelpersModule } from 'src/helpers/helpers.module';
+import { HelpersModule } from '../helpers/helpers.module';
 
 @Module({
   controllers: [PostsController],

@@ -1,7 +1,7 @@
 import { Global, Module, forwardRef } from '@nestjs/common';
 import { HelpersService } from './helpers.service';
-import { MediasModule } from 'src/medias/medias.module';
-import { PostsModule } from 'src/posts/posts.module';
+import { MediasModule } from '../medias/medias.module';
+import { PostsModule } from '../posts/posts.module';
 
 @Global()
 @Module({
